@@ -12,7 +12,7 @@ const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',                  // Tu usuario de MySQL
     password: '', // ¡Recuerda cambiar esto por tu contraseña real!
-    database: 'tienda_bd',         // Tu base de datos local
+    database: 'tienda_db',         // Tu base de datos local
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
