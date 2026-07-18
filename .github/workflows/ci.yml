@@ -29,7 +29,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-node-version: '18' # Puedes usar la versión que tengas instalada
+          node-version: '18' # Puedes usar la versión que tengas instalada
 
       # Paso C: Instalar las dependencias (express, mysql2, jest, supertest)
       - name: Instalar dependencias
