@@ -1,0 +1,53 @@
+name: Pipeline del CRUD Node con MySQL
+
+# ¿Cuándo se va a activar? Cada vez que hagas un push a la rama main o dev
+on:
+  push:
+    branches: [ main, dev ]
+
+jobs:
+  pruebas-de-integracion:
+    runs-on: ubuntu-latest
+
+    # Aquí configuramos una base de datos MySQL temporal dentro de la nube de GitHub
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: tienda_db
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      # Paso A: Clonar tu código en el servidor de GitHub
+      - name: Descargar código fuente
+        uses: actions/checkout@v4
+
+      # Paso B: Configurar la versión correcta de Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-node-version: '18' # Puedes usar la versión que tengas instalada
+
+      # Paso C: Instalar las dependencias (express, mysql2, jest, supertest)
+      - name: Instalar dependencias
+        run: npm install
+
+      # Paso D: Poblar la base de datos de la nube antes de probar
+      - name: Inicializar tablas de MySQL
+        run: |
+          mysql -h 127.0.0.1 -u root -e "
+          USE tienda_db;
+          CREATE TABLE IF NOT EXISTS productos (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              nombre VARCHAR(100) NOT NULL,
+              precio DECIMAL(10, 2) NOT NULL
+          );
+          INSERT INTO productos (nombre, precio) VALUES ('Teclado Mecánico', 85.00), ('Mouse Inalámbrico', 45.00);
+          "
+
+      # Paso E: ¡Correr el comando estrella que acabas de probar!
+      - name: Ejecutar pruebas automatizadas
+        run: npm test
