@@ -4,6 +4,7 @@ const express = require('express');
 const productoRoutes = require('./src/productos/infrastructure/producto.routes');
 const clienteRoutes = require('./src/clientes/infrastructure/cliente.routes');
 const facturaRoutes = require('./src/facturacion/infrastructure/factura.routes');
+const carteraRoutes = require('./src/cartera/infrastructure/cartera.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/productos', productoRoutes);
 app.use('/clientes', clienteRoutes);
 app.use('/facturas', facturaRoutes);
+app.use('/cartera', carteraRoutes);
 
 // Encender el servidor solo si no estamos ejecutando pruebas de Jest
 if (process.env.NODE_ENV !== 'test') {
